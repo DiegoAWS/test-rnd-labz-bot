@@ -1,4 +1,4 @@
-import { bot } from "./services/telegraf";
+import { bot } from "../services/telegraf";
 
 const frontendUrl = process.env.FRONTEND_URL || "https://127.0.0.1:5173/";
 

@@ -3,7 +3,7 @@ dotenv.config();
 
 import { sequelize } from './db/connection';
 // load bot commands
-import "./commands"
+import "./commands/"
 
 
 (async()=>{

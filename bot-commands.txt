@@ -1,0 +1,3 @@
+start - Start bot
+admin - Administrative section
+adminhello - Send message to a user
