@@ -1,0 +1,41 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Adjust to match the branch you want to deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOST: your-ec2-ip-or-domain
+        USER: your-ec2-username  # e.g. ubuntu, ec2-user, etc.
+      run: |
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        scp -i private_key.pem -o StrictHostKeyChecking=no -r . $USER@$HOST:/path/to/your/deployment/folder
+        rm -f private_key.pem
+
+    - name: Build and Restart pm2 on EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOST: your-ec2-ip-or-domain
+        USER: your-ec2-username
+      run: |
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << EOF
+          cd /path/to/your/deployment/folder
+          npm install  # Or yarn install, if you use Yarn
+          npm run build  # Adjust this if you have a different build command
+          pm2 start dist/index.js --name your-app-name || pm2 restart your-app-name
+        EOF
+        rm -f private_key.pem
