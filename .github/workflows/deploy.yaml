@@ -13,29 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Deploy to EC2
+    - name: Deploy to Server 1
+      uses: easingthemes/ssh-deploy@main
       env:
-        PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        HOST: 35.157.168.13
-        USER: ec2-user
-      run: |
-        echo "$PRIVATE_KEY" > private_key.pem
-        chmod 600 private_key.pem
-        scp -i private_key.pem -o StrictHostKeyChecking=no -r ./ $USER@$HOST:/home/ec2-user
-        rm -f private_key.pem
-
-    - name: Build and Restart pm2 on EC2
-      env:
-        PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        HOST: 35.157.168.13
-        USER: ec2-user
-      run: |
-        echo "$PRIVATE_KEY" > private_key.pem
-        chmod 600 private_key.pem
-        ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << EOF
-          cd /home/ec2-user
-          npm install
-          npm run build 
-          pm2 start dist/index.js --name test-rnd-labz-test || pm2 restart your-app-name
-        EOF
-        rm -f private_key.pem
+        SSH_PRIVATE_KEY: ${ { secrets.SSH_PRIVATE_KEY }}
+        REMOTE_HOST: "ec2-35-157-168-13.eu-central-1.compute.amazonaws.com"
+        REMOTE_USER: ec2-user
+        TARGET: "/home/ec2-user/"
+    
