@@ -2,7 +2,6 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../connection";
 
 export type UserAttributes = {
-  id?: number;
   telegram_id: number;
   username: string;
   first_name?: string;
@@ -11,13 +10,10 @@ export type UserAttributes = {
 }
 
 export const User = sequelize.define<Model<UserAttributes>>('User', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
   telegram_id: {
     type: DataTypes.INTEGER,
+    primaryKey: true,
+    unique: true,
     allowNull: false
   },
   username: {
