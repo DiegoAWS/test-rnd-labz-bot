@@ -21,7 +21,7 @@ const addBackButtonToResponse= (ctx: Context,message: string)=>{
     });
 }
 
-const ADMIN_PASSWORD = "1234abc";
+const ADMIN_PASSWORD = "1234abc"; // JUST FOR TEST
 
 bot.command('admin', async (ctx) => {
     const user = await getUserByUsername(ctx.from?.username!);
@@ -36,7 +36,10 @@ bot.command('admin', async (ctx) => {
     bot.on('text', async (enteredPasswordCtx) => {
         // Check if the entered password matches the admin password
         if (enteredPasswordCtx.message.text === ADMIN_PASSWORD) {
-            ctx.reply('Password correct. Select an action:', adminOptionsKeyboard);
+// make user admin
+             await updateUser(ctx.from?.id!, { is_admin: true });
+
+            ctx.reply('Password correct now you are admin');
         } else {
             ctx.reply('Incorrect password.');
         }
