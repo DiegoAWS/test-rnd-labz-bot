@@ -21,7 +21,7 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -i private_key.pem -o StrictHostKeyChecking=no -r . $USER@$HOST:/home/ec2-user
+        scp -i private_key.pem -o StrictHostKeyChecking=no -r ./ $USER@$HOST:/home/ec2-user
         rm -f private_key.pem
 
     - name: Build and Restart pm2 on EC2
